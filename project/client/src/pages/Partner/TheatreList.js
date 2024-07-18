@@ -96,7 +96,12 @@ const TheatreList = () => {
     return(
         <>
         <div className='d-flex justify-content-end'>
-            <Button type="primary" onClick={() => { setIsModalOpen(true); setFormType("add") }}>Add Theatre</Button>
+            <Button type="primary" onClick={() => { 
+              setIsModalOpen(true); 
+              setFormType("add"); 
+              // clear selected theatre
+              setSelectedTheatre(null); 
+              }}>Add Theatre</Button>
         </div>   
         <Table dataSource={theatres} columns={columns} />
         { isModalOpen && <TheatreFormModal isModalOpen={isModalOpen} selectedTheatre={selectedTheatre} setSelectedTheatre={setSelectedTheatre} setIsModalOpen={setIsModalOpen} formType={formType} getData={getData} /> }

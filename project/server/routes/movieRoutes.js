@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const Movie = require('../models/movieModel')
+const Show = require('../models/showModel')
+const Booking = require('../models/bookingModel')
 
 // Add a Movie
 
@@ -61,6 +63,11 @@ router.put('/update-movie', async (req, res) => {
 
 router.put('/delete-movie', async (req, res) => {
     try{
+        // delete all bookings of this movie
+        const shows = await Show.find({ movie: req.body.movieId });
+        const showIds = shows.map(show => show._id);
+        await Booking.deleteMany({ show: { $in: showIds } });
+        
         await Movie.findByIdAndDelete(req.body.movieId);
         console.log(req.body.movieId);
         res.send({

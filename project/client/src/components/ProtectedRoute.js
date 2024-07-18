@@ -23,6 +23,9 @@ function ProtectedRoute({ children }) {
     {
       label: "Home",
       icon: <HomeOutlined />,
+      onClick: () => {
+        navigate("/");
+      },
     },
 
     {
@@ -31,20 +34,19 @@ function ProtectedRoute({ children }) {
       children: [
         {
           label: (
-            <span
-            onClick={() => {
-              if (user.role === 'admin') {
-                navigate("/admin");
-              } else if (user.role === 'partner') {
-                navigate("/partner");
-              } else {
-                navigate("/profile");
-              }
-            }}
-            >
+            <span>
               My Profile
             </span>
           ),
+          onClick: () => {
+            if (user.role === 'admin') {
+              navigate("/admin");
+            } else if (user.role === 'partner') {
+              navigate("/partner");
+            } else {
+              navigate("/profile");
+            }
+          },
           icon: <ProfileOutlined />,
         },
 
@@ -52,13 +54,14 @@ function ProtectedRoute({ children }) {
           label: (
             <Link
               to="/login"
-              onClick={() => {
-                localStorage.removeItem("token");
-              }}
             >
               Log Out
             </Link>
           ),
+          onClick: () => {
+            localStorage.removeItem("token");
+            dispatch(setUser(null));
+          },
           icon: <LogoutOutlined />,
         },
       ],
@@ -70,6 +73,13 @@ function ProtectedRoute({ children }) {
       dispatch(showLoading());
       const response = await GetCurrentUser();
       console.log(response)
+      if (response.data.role === 'admin') {
+        navigate("/admin");
+      } else if (response.data.role === 'partner') {
+        navigate("/partner");
+      } else {
+        navigate("/profile");
+      }
       dispatch(setUser(response.data));
       dispatch(hideLoading());
       // Hide Loader
